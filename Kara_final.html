@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>BotUI - Hello World</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!--#1 CSS Files-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui-theme-default.css" />
+    <style>
+      html, body {
+        background-color: #41c0cc;
+        background-image: linear-gradient(-90deg, #41c0cc, #41cca5);
+      }
+      .botui-container {
+        background-color: inherit;
+      }
+
+      .botui-messages-container {
+      }
+
+      .botui-actions-container {
+        padding: 0px 30px;
+      }
+
+      .botui-message {
+      }
+
+      .botui-message-content.text {
+        background-color: #e1fafc;
+        color: #404040;
+      }
+
+      .botui-message-content.human {
+        background-color: #f7ff61;
+        color: #404040;
+      }
+
+      .botui-message-content.embed {
+      }
+
+      .botui-message-content-link {
+      }
+
+      .botui-actions-text-input {
+      }
+
+      .botui-actions-text-submit {
+      }
+
+      button.botui-actions-buttons-button {
+        margin-top: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <!--#2 BotUI Tag-->
+    <div class="botui-app-container" id="hello-world">
+      <bot-ui></bot-ui>
+    </div>
+    <!--#3 Javascript Files-->
+    <script src="https://cdn.jsdelivr.net/vue/latest/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/botui/build/botui.js"></script>
+    <script>
+      const kara = new BotUI('hello-world')
+      const fullNameCheck = name => /^[a-zA-Z]+ [a-zA-Z]+$/.test(name)
+      const fullEmailCheck = email => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+      var name;
+
+      const end_it = () =>{
+        kara.message.add({
+          delay:2000,
+          loading:true,
+          content:"Tell me a little bit about your interest, e.g:- cooking,dancing,etc"
+        }).then(res=>{
+          kara.action.text({
+            action:[
+            {
+              placeholder:"Your Interest"
+            }]
+          }).then(res=>{
+            //Add to DB
+            kara.message.add({
+              delay:1500,
+              loading:true,
+              content:"Finally, Any other certifications, please mention."
+            }).then(_=>{
+              kara.action.text({
+                action:[
+                {
+                  placeholder:"Other certifications"
+                }]
+              }).then(res=>{
+                kara.message.add({
+                  delay:3000,
+                  loading:true,
+                  content:"Congratulations! Your Profile has been created!😊"
+                }).then(_=>{
+                  kara.message.add({
+                    delay:2000,
+                    loading:true,
+                    content:"Hope you enjoy your journey with us!"
+                  }).then(_=>{
+                    kara.message.add({
+                      delay:3000,
+                      loading:true,
+                      content:"If your candidature is taken forward, our team will get in touch with you!😊"
+                    }).then(_=>{
+                      kara.message.add({
+                        delay:3500,
+                        loading:true,
+                        content:`Good Bye, ${name}. It was a pleasure to talk to you.`
+                      })
+                })
+              })
+            })
+          })
+        })
+      })
+        })
+      }
+ 
+      const ask_years_of_experience = () =>{
+        kara.action.text({
+          action:[
+          {  
+             placeholder:"years"
+          }]   
+          }).then(res=>{
+            if(res.value>0){
+              kara.message.add({
+                  delay:1600,
+                  loading:true,
+                  content:"That's Great! You are quite experienced!"
+                }).then(_=>{
+                  end_it();
+                })
+            }
+            else {
+              kara.message.add({
+                delay:1000,
+                loading:true,
+                content:"Please enter only a number greater than 0"
+              }).then(_=>{
+                ask_years_of_experience();
+              })
+            }
+            
+         })
+      }
+      const ask_company_name = () =>{
+        kara.message.add({
+          delay:1700,
+          loading:true,
+          content:"What is the name of the company you have worked with?"
+        }).then(_=>{
+          kara.action.text({
+            action:[
+            {
+              placeholder:"The company you have worked for"
+            }]
+          }).then(res=>{
+            kara.message.add({
+              delay:1600,
+              loading:true,
+              content:"Oh cool! For how many years? Just mention the number."
+            }).then(_=>{
+              ask_years_of_experience();
+            })
+          })
+        })
+      }
+
+      const ask_specific_career_choice = () =>{
+        kara.message.add({
+          delay:1500,
+          loading:true,
+          content:"No worries! Do you have any specific career choice?"
+        }).then(_=>{
+          kara.action.text({
+            action:[
+            {
+              placeholder:"Your Specific Choice"
+            }]
+          }).then(res=>{
+            kara.message.add({
+              delay:1700,
+              loading:true,
+              content:"Thanks! We'll keep your preference in our mind!"
+            }).then(_=>{
+              kara.message.add({
+                delay:2000,
+                loading:true,
+                content:"We have archived your candidature, in case we have any openings, our team will reach you!😊"
+              }).then(_=>{
+                end_it();
+              })
+            })
+          })
+        })
+      }
+
+      const working = () =>{
+        kara.message.add({
+          delay:1500,
+          loading:true,
+          content:"What's your job title?"
+        }).then(_=>{
+          kara.action.text({
+            action:[
+            {
+              placeholder:"Your Job title"
+            }]
+          }).then(res=>{
+            //add to db
+            kara.message.add({
+              delay:1800,
+              loading:true,
+              content:"Awesome! Do you have any prior experience in the required job description?"
+            }).then(_=>{
+              kara.action.button({
+                action:[
+                {
+                  text:"Yes",
+                  value:true
+                },
+                {
+                  text:"No",
+                  value:false
+                }]
+              }).then(res=>{
+                if(res.value){
+                  ask_company_name();
+                }
+                else ask_specific_career_choice();
+              })
+            })
+          })
+        })
+      }
+      const joining = () =>{
+        kara.message.add({
+          delay:2000,
+          loading:true,
+          content:"Are you able to join the organization immediately?"
+        }).then(_=>{
+          kara.action.button({
+            action:[
+            {
+              text:"Yes",
+              value:true
+            },
+            {
+              text:"No",
+              value:false
+            }]
+          }).then(res=>{
+            if(res.value){
+              kara.message.add({
+                delay:1500,
+                loading:true,
+                content:"Awesome! That's Great!"
+              }).then(_=>{
+                kara.message.add({
+                  delay:2000,
+                  loading:true,
+                  content:"Thank you so much! Your inputs are noted."
+                }).then(_=>{
+                  end_it();
+                })
+              })
+            }
+            else {
+              kara.message.add({
+                delay:2000,
+                loading:true,
+                content:"How long will it take for you to join the organization?"
+              }).then(_=>{
+                kara.action.text({
+                  action:[
+                  {
+                    placeholder:"No. of days before joining"
+                  }
+                  ]
+                }).then(res=>{
+                  //add to db
+                  end_it();
+                })
+              })
+            }
+          })
+        })
+      }
+
+      const ask_year_of_college = () =>{
+        kara.action.text({
+          action:[
+          {
+            placeholder:"Year of College"
+          }]
+        }).then(res=>{
+          if(res.value>0){
+            joining();
+          }
+          else {
+            kara.message.add({
+              delay:1500,
+              loading:true,
+              content:"Please enter a number greater than 0"
+            }).then(_=>{
+              ask_year_of_college();
+            })
+          }
+        })
+      }
+      const ask_duration_of_degree = () =>{
+        kara.action.text({
+          action:[
+          {
+            placeholder:"Duration of degree"
+          }]
+        }).then(res=>{
+          if(res.value>0){
+            kara.message.add({
+              delay:1500,
+              loading:true,
+              content:"Which year are you in your college?"
+            }).then(_=>{
+              ask_year_of_college();
+            })
+          }
+          else {
+            kara.message.add({
+              delay:1000,
+              loading:true,
+              content:"Please enter a number greater than 0"
+            }).then(_=>{
+              ask_duration_of_degree();
+            })
+          }
+        })
+      }
+      const studying = () =>{
+        kara.message.add({
+          delay:2000,
+          loading:true,
+          content:"What are you studying?"
+        }).then(_=>{
+          kara.action.text({
+            action:[
+            {
+              placeholder:"Your study."
+            }]
+          }).then(res=>{
+            //add to db
+            kara.message.add({
+              delay:1500,
+              loading:true,
+              content:"What is your area of specialization?"
+            }).then(_=>{
+              kara.action.text({
+                action:[
+                {
+                  placeholder:"Your specialization."
+                }]
+              }).then(res=>{
+                //add to db
+                kara.message.add({
+                  delay:1700,
+                  loading:true,
+                  content:"In which college are you studying?"
+                }).then(_=>{
+                  kara.action.text({
+                    action:[
+                    {
+                      placeholder:"Your college."
+                    }]
+                  }).then(res=>{
+                    //add to db
+                    kara.message.add({
+                      delay:2000,
+                      loading:true,
+                      content:"How long is your degree/diploma course? Mention the number in years."
+                    }).then(_=>{
+                      ask_duration_of_degree()
+                    })
+                  })
+                })
+              })
+            })
+          })
+        })
+      }
+
+      const ask_prior_experience = () =>{
+        kara.message.add({
+          delay:2000,
+          loading:true,
+          content:"Please provide your prior experience and education."
+        }).then(_=>{
+          kara.action.text({
+            action:[
+            {
+              placeholder:"Your prior experience"
+            }]
+          }).then(res=>{
+            //add to db
+            kara.message.add({
+              delay:1500,
+              loading:true,
+              content:"Please specify your area of interest."
+            }).then(_=>{
+              kara.action.text({
+                action:[
+                {
+                  placeholder:"Your area of interest"
+                }]
+              }).then(res=>{
+                //add to db
+                joining();
+              })
+            })
+          })
+        })
+      }
+
+
+      const gap = () =>{
+        kara.message.add({
+          delay:2000,
+          loading:true,
+          content:"How long have you been on your gap?"
+        }).then(_=>{
+          kara.action.text({
+            action:[
+            {
+              placeholder:"Gap Duration"
+            }]
+          }).then(res=>{
+            //add to db
+            kara.message.add({
+              delay:1500,
+              loading:true,
+              content:"What is the reason for your gap?"
+            }).then(_=>{
+              kara.action.select({
+                action: {
+                  placeholder:"Select Reason",
+                  value:"Select Reason",
+                  searchselect:true,
+                  label:'text',
+                  options:[
+                    {value:"Family Health Issue",text:"Family Health Issue"},
+                    {value:"Personal Health Problem",text:"Personal Health Problem"},
+                    {value:"Taking time to relocate and finding new job in a new city",text:"Taking time to relocate and finding new job in a new city"},
+                    {value:"Pursuing further education",text:"Pursuing further education"},
+                    {value:"Tried to start a business",text:"Tried to start a business"},
+                    {value:"You were laid off",text:"You were laid off"},
+                    {value:"Others",text:"Others"}
+                  ],
+                  button:{
+                    icon:'check',
+                    label:'OK',
+                  }
+                }
+              }).then(res=>{
+                if(res.value=="Others"){
+                  kara.message.add({
+                    delay:1700,
+                    loading:true,
+                    content:"If Others, then please mention."
+                  }).then(_=>{
+                    kara.action.text({
+                      action:[
+                      {
+                        placeholder:"Other reason"
+                      }]
+                    }).then(res=>{
+                      //add to db
+                      ask_prior_experience();
+                    })
+                  })
+                }
+                else {
+                  ask_prior_experience();
+                }
+              })
+            })
+          })
+        })
+      }
+
+      const ask_currently_doing = () =>{
+        kara.message.add({
+          delay:1500,
+          loading:true,
+          content:"What are you doing currently?"
+        }).then(_=>{
+          kara.action.button({
+            action:[
+            {
+              text:"Working"
+            },
+            {
+              text:"Studying"
+            },
+            {
+              text:"Break/Gap"
+            }]
+          }).then(res=>{
+             if(res.text=="Working"){
+                working();
+             }
+             else if(res.text=="Studying"){
+                studying();
+             }
+             else gap();
+          })
+        })
+      }
+
+      const opportunities = () =>{
+        kara.message.add({
+          loading:true,
+          delay:2000,
+          content:"Great then, Are you looking for job opportunities?"
+        }).then(_=>{
+          kara.action.button({
+            action:[
+            {
+              text:"Yes",
+              value:true
+            },
+            {
+              text:"No",
+              value:false
+            }]
+          }).then(res=>{
+            if(res.value){
+              ask_currently_doing();
+            }
+            else {
+              exit();
+            }
+          })
+        })
+      }
+
+
+
+     const ask_state_and_city = () =>{
+      kara.message.add({
+        delay:2000,
+        loading:true,
+        content:"By the way, where are you currently based on? Select the state you are in."
+      }).then(_=>{
+        kara.action.select({
+          action:{
+            placeholder:"Select State",
+            value:'Select State',
+            searchselect:true,
+            label:'text',
+            options:[
+                  {value:"Andaman and Nicobar",text:"Andaman and Nicobar"},
+                  {value:"Andhra Pradesh",text:"Andhra Pradesh"},
+                  {value:"Arunachal Pradesh",text:"Arunachal Pradesh"},
+                  {value:"Assam",text:"Assam"},
+                  {value:"Bihar",text:"Bihar"},
+                  {value:"Chandigarh",text:"Chandigarh"},
+                  {value:"Chhattisgarh",text:"Chhattisgarh"},
+                  {value:"Dadra & Nagar Haveli",text:"Dadra & Nagar Haveli"},
+                  {value:"Daman & Diu",text:"Daman & Diu"},
+                  {value:"Delhi",text:"Delhi"},
+                  {value:"Goa",text:"Goa"},
+                  {value:"Gujarat",text:"Gujarat"},
+                  {value:"Haryana",text:"Haryana"},
+                  {value:"Himachal Pradesh",text:"Himachal Pradesh"},
+                  {value:"Jammu & Kashmir",text:"Jammu & Kashmir"},
+                  {value:"Jharkhand",text:"Jharkhand"},
+                  {value:"Karnataka",text:"Karnataka"},
+                  {value:"Kerala",text:"Kerala"},
+                  {value:"Lakshadweep",text:"Lakshadweep"},
+                  {value:"Madhya Pradesh",text:"Madhya Pradesh"},
+                  {value:"Maharashtra",text:"Maharashtra"},
+                  {value:"Manipur",text:"Manipur"},
+                  {value:"Meghalaya",text:"Meghalaya"},
+                  {value:"Mizoram",text:"Mizoram"},
+                  {value:"Nagaland",text:"Nagaland"},
+                  {value:"Orissa",text:"Orissa"},
+                  {value:"Pondicherry",text:"Pondicherry"},
+                  {value:"Punjab",text:"Punjab"},
+                  {value:"Rajasthan",text:"Rajasthan"},
+                  {value:"Sikkim",text:"Sikkim"},
+                  {value:"Tamil Nadu",text:"Tamil Nadu"},
+                  {value:"Telangana",text:"Telangana"},
+                  {value:"Tripura",text:"Tripura"},
+                  {value:"Uttar Pradesh",text:"Uttar Pradesh"},
+                  {value:"Uttaranchal",text:"Uttaranchal"},
+                  {value:"West Bengal",text:"West Bengal"}
+            ],
+            button:{
+              icon:'check',
+              label:'OK'
+            }
+          }
+        }).then(res=>{
+          var state = res.text;
+          kara.message.add({
+            loading:true,
+            delay:1500,
+            content:"Oh Nice! Which city?"
+          }).then(_=>{
+            //try dropdown for cities at the end.
+            kara.action.text({
+              action:[
+                {placeholder:"Your City"}
+              ]
+            }).then(res=>{
+              var city = res.value;
+              kara.message.add({
+                loading:true,
+                delay:1000,
+                content:`Cool! I've heard ${city} is beautiful!`
+              }).then(_=>{
+                opportunities();
+              })
+            })
+          })
+        })
+      })
+     } 
+
+
+
+     const ask_other_things = ()=>{
+      kara.message.add({
+        delay:2000,
+        loading:true,
+        content:"Your Marital Status, Please?"
+      }).then(_=>{
+        kara.action.button({
+          action:[
+          {
+            text:"Single",
+            value:0
+          },
+          {
+            text:"Married",
+            value:1
+          }
+          ]
+        }).then(res=>{
+          //Add to DB
+          kara.message.add({
+            delay:1500,
+            loading:true,
+            content:"Tell me about your highest degree or diploma"
+          }).then(_=>{
+            kara.action.button({
+              action:[
+              {
+                text:"Undergraduate",
+                value:0,
+              },
+              {
+                text:"Post-graduate",
+                value:1
+              },
+              {
+                text:"Doctorate",
+                value:2
+              }
+              ]
+            }).then(res=>{
+              //Add to DB
+              kara.message.add({
+                delay:2000,
+                loading:true,
+                content:"Tell me about your specialization"
+              }).then(_=>{
+                kara.action.text({
+                  action:[
+                  {
+                    placeholder:"Your specialization"
+                  }]
+                }).then(res=>{
+                  //Add to DB.
+                  ask_state_and_city()
+                })
+              })
+            })
+          })
+        })
+      })
+     }
+
+     const dateCheck = birthday => {
+        var optimizedBirthday = birthday.replace(/-/g, "/");
+        var myBirthday = new Date(optimizedBirthday);
+        var currentDate = new Date().toJSON().slice(0,10)+' 01:00:00';
+        var myAge = ~~((Date.now(currentDate) - myBirthday) / (31557600000));
+        if(myAge < 18) {
+            kara.message.add({
+              delay:1500,
+              loading:true,
+              content:"Sorry! You are not eligible at the moment."
+            })
+        }
+        else{
+            ask_other_things();
+        }
+     }
+      
+      const ask_dob = ()=>{
+        kara.message.add({
+          delay:2000,
+          loading:true,
+          content:"Please select your date of birth"
+        }).then(_=>{
+          kara.message.add({
+            type:'html',
+            content:`
+                <input type="date" onchange="dateCheck(this.value)">
+              `
+          })
+        })
+      }
+
+
+      const ask_gender = ()=>{
+        kara.message.add({
+          delay:2500,
+          loading:true,
+          content:"Please select your gender"
+        }).then(_=>{
+          kara.action.button({
+            action:[
+            {
+              text:"Male",
+              value:1
+            },
+            {
+              text:"Female",
+              value:2
+            },
+            {
+              text:"Other",
+              value:3
+            }
+            ]
+          }).then(res=>{
+            // if(res.value==1){
+            //   //TODO Add to DB
+            // }
+            // else if(res.value==2){
+            //   //TODO Add to DB
+            // }
+            // else {
+            //   //TODO Add to DB
+            // }
+            ask_dob()
+          })
+        })
+      }
+
+      const ask_email = ()=>{
+          kara.action.text({
+            action:[
+            {
+              placeholder:"Your Email"
+            }]
+          }).then(res=>{
+            if(fullEmailCheck(res.value)){
+              ask_gender()
+            }
+            else {
+              kara.message.add({
+                delay:2000,
+                loading:true,
+                content:"Please enter a valid email id."
+              }).then(_=>{
+                ask_email()
+              })
+            }
+          })
+      }
+
+      const ask_name = () =>{
+        kara.action.text({
+          action:[
+          {
+            placeholder:"Your Name"
+          }]
+        }).then(res=>{
+          name = res.value
+          if(fullNameCheck(res.value)){
+            kara.message.add({
+              delay:1500,
+              loading:true,
+              content:`Nice to meet you ${res.value}!`
+            }).then(_=>{
+              kara.message.add({
+                delay:2000,
+                loading:true,
+                content:"Please enter your email."
+              }).then(_=>{
+                ask_email()
+              })
+            })
+          }
+          else {
+            kara.message.add({
+              delay:2000,
+              loading:true,
+              content:"We encourage you to write your full name, like Albert Einstein. But it's ok if you don't want to mention it."
+            }).then(_=>{
+                kara.message.add({
+              delay:3000,
+              loading:true,
+              content:`Are you sure you want to apply with this name, ${res.value}?`
+            }).then(_=>{
+                kara.action.button({
+                action:[
+                  {
+                    text:'Yes',
+                    value:true
+                  },
+                  {
+                    text:'No',
+                    value:false
+                  }
+                ]
+              }).then(res2=>{
+                if(res2.value){
+                  kara.message.add({
+                    delay:1500,
+                    loading:true,
+                    content:`Nice to meet you ${name}!`
+                  }).then(_=>{
+                    kara.message.add({
+                      delay:2000,
+                      loading:true,
+                      content:"Please enter your email."
+                    }).then(_=>{
+                      ask_email()
+                    })
+                  }) 
+                }
+                else {
+                  kara.message.add({
+                    delay:1500,
+                    loading:true,
+                    content:"We encourage you to write your full name, like Albert Einstein. But it's ok if you don't want to mention it."
+                  }).then(_=>{
+                    ask_name()
+                  })  
+                }
+              })
+            })
+            })
+            
+          }
+        })
+      }
+
+      const go_on = () =>{
+        kara.message.add({
+          delay:1500,
+          loading:true,
+          content:"Great then, let's get started!"
+        }).then(_=>{
+          kara.message.add({
+            delay:2000,
+            loading:true,
+            content:"Let me take some of your personal details."
+          }).then(_=>{
+            kara.message.add({
+              delay:3000,
+              loading:true,
+              content:"First up, what's your full name?"
+            }).then(_=>{
+              ask_name()
+            })
+          })
+        })
+      }
+      const exit = () =>{
+        kara.message.add({
+          delay:1000,
+          loading:true,
+          content:"It's ok. You can chat with me anytime. I'm always here to help you. 🙂"
+        })
+      }
+      const greet = () => {
+        kara.message.add({
+        delay:3000,
+        loading:true,
+        content:"Hi there! I'm Kara from Conscript!"
+        }).then(_=>{
+        kara.message.add({
+          type:'html',
+          content: `
+              <img src = 'https://s1.zerochan.net/Kara.%28Detroit%3A.Become.Human%29.600.2334931.jpg' width="224" height="224">
+            `
+        }).then(_=>{
+          kara.message.add({
+            delay:3000,
+            loading:true,
+            content:"Are you ready for your next big step in your career?"
+          }).then(_=>{
+            kara.action.button({
+              action:[
+                {
+                  text:'Yes',
+                  value:true
+                },
+                {
+                  text:'No',
+                  value:false
+                }
+              ]
+            }).then(res=>{
+                if(res.value){
+                  go_on()
+                }
+                else exit()
+            })
+          })
+        })
+      })
+      }
+      greet();
+    </script>
+  </body>
+</html>
